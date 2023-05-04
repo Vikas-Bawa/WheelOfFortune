@@ -85,7 +85,7 @@ const App = () => {
       segments={segments}
       segColors={segColors}
       segImages={segImages}
-      winningSegment='Segment 16'
+      winningSegment='Segment 21'
       onFinished={(winner) => onFinished(winner)}
       primaryColor='black'
       contrastColor='white'

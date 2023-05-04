@@ -69,6 +69,7 @@ const WheelComponent = ({
     const duration = new Date().getTime() - spinStart
     let progress = 0
     let finished = false
+
     // debugger;
     if (duration < upTime) {
       progress = duration / upTime
@@ -77,24 +78,36 @@ const WheelComponent = ({
     } else {
       if (winningSegment) {
         // debugger;
-        if (currentSegment === winningSegment && frames > segments.length) {
+        console.log(' currentSegment : ', currentSegment);
+        if (winningSegment === currentSegment && angleDelta < 0.1) {
+          console.log('progress: ', progress, ' angleDelta : ', angleDelta);
+        }
+        if (currentSegment === winningSegment && frames > segments.length && angleDelta < 0.05) {
           progress = duration / upTime
           angleDelta =
             maxSpeed * Math.sin((progress * Math.PI) / 2 + Math.PI / 2)
-          progress = 1
+          // progress = 1
           console.log('winning Segment is equal and frames are more...')
         } else {
-          progress = duration / downTime
+          if (angleDelta < 0.1)
+            progress = duration / (downTime + 400)
+          else if (angleDelta < 0.05)
+            progress = (duration / (downTime + 3000));
+          else
+            progress = duration / downTime
           angleDelta =
             maxSpeed * Math.sin((progress * Math.PI) / 2 + Math.PI / 2)
+          // angleDelta = 0.010049041747142068;
         }
       } else {
         progress = duration / downTime
         angleDelta = maxSpeed * Math.sin((progress * Math.PI) / 2 + Math.PI / 2)
       }
-      console.log(progress, ' --- ', angleDelta, ' --- ');
+      console.log('progress... ', progress, ' --- ', angleDelta);
+      console.log('duration ... ', duration)
       if (progress >= 1) finished = true
     }
+    // console.log('duration... ', duration);
     angleCurrent += angleDelta
     while (angleCurrent >= Math.PI * 2) angleCurrent -= Math.PI * 2
     if (finished) {
@@ -141,12 +154,17 @@ const WheelComponent = ({
     // };
     // imageObj.src = segImages[key];
     ctx.translate(centerX, centerY)
-    ctx.rotate((lastAngle + angle) / 2)
+    ctx.rotate((angle + lastAngle) / 2)
+    console.log(key, angle, lastAngle)
     ctx.fillStyle = contrastColor
     ctx.font = 'bold 1em ' + fontFamily
     ctx.fillText(value.substr(0, 21), size / 2 + 20, 0)
+    ctx.rotate(Math.PI / 2)
+    // ctx.fillCircleText(value, centerX, centerY, 300, Math.PI * 1.5)
+    // ctx.fillTextCircle(value, centerX, centerY, 300, Math.PI * 1.5);
     ctx.restore()
   }
+
 
   const drawWheel = () => {
     const ctx = canvasContext
